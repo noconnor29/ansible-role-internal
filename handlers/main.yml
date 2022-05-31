@@ -1,0 +1,4 @@
+---
+- name: reload sysctl
+  ansible.posix.sysctl:
+    reload: true

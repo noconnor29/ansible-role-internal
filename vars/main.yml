@@ -1,0 +1,4 @@
+---
+git_user: git@github.com:noconnor29
+ansible_files: /opt/ansible/files
+ssh_port: 22

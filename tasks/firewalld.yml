@@ -1,0 +1,64 @@
+---
+- name: Baseline Firewall Configuration
+  block:
+    - name: Enable firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: Set default external policy
+      ansible.posix.firewalld:
+        zone: public
+        target: DROP
+        state: enabled
+        permanent: true
+
+    - name: disable IPv6
+      ansible.builtin.lineinfile:
+        dest: /etc/sysctl.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+        insertafter: EOF
+      loop:
+        - regexp: "^net.ipv6.conf.all.disable_ipv6"
+          line: "net.ipv6.conf.all.disable_ipv6 = 1"
+        - regexp: "^net.ipv6.conf.default.disable_ipv6"
+          line: "net.ipv6.conf.default.disable_ipv6 = 1"
+      notify: reload sysctl
+
+- name: Role-specific Firewall Config
+  block:
+    - name: Configure Internal Network
+      ansible.posix.firewalld:
+        zone: trusted
+        interface: ens224
+        permanent: true
+        immediate: true
+
+    # Example
+    #- name: Set firewalld rules
+    #  ansible.posix.firewalld:
+    #    zone: "{{ item.zone }}"
+    #    port: "{{ item.port }}/{{ item.proto }}"
+    #    source: "{{ item.source }}"
+    #    state: "{{ item.state }}"
+    #    permanent: true
+    #    immediate: true
+    #  loop:
+    #    # Allow iPerf
+    #    - {zone: "trusted", port: "5201", proto: "tcp", source: "10.1.0.0/16", state: "enabled"}
+
+  always:
+    - name: Allow public SSH
+      ansible.posix.firewalld:
+        zone: "{{ item.zone }}"
+        port: "{{ item.port }}/{{ item.proto }}"
+        source: "{{ item.source }}"
+        state: "{{ item.state }}"
+        permanent: true
+        immediate: true
+      loop:
+        - {zone: "trusted", port: "22", proto: "tcp", source: "10.1.0.0/16", state: "enabled"}
+        #- {zone: "public", port: "22", proto: "tcp", source: "73.149.158.0/24", state: "enabled"}

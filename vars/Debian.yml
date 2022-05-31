@@ -1,0 +1,4 @@
+# UFW Vars
+ssh_port: 22
+ufw_state: enabled  # disabled/enabled/reloaded/reset
+ufw_logging: off  # on/off/low/medium/high/full

@@ -1,0 +1,15 @@
+---
+- name: Include OS-specific variables.
+  include_vars: "{{ ansible_os_family }}.yml"
+
+# Pull External git repos
+- include_tasks: git.yml
+
+## Firewall
+# firewalld
+- include_tasks: firewalld.yml
+  when: ansible_os_family == 'RedHat'
+
+# ufw
+- include_tasks: ufw.yml
+  when: ansible_os_family == 'Debian'

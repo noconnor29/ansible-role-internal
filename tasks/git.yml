@@ -1,0 +1,31 @@
+---
+- name: Deploy Git Repositories
+  ansible.builtin.copy:
+    # Investigate how to store reponame, dest, owner, group, etc. in dictionary
+    src: "{{ ansible_files }}/{{ repo.src }}"
+    dest: "{{ repo.dest }}"
+    owner: "{{ repo.owner }}"
+    group: "{{ repo.group }}"
+  loop:
+    - src: .external-configs
+      dest: /home/adminnick
+      owner: adminnick
+      group: adminnick
+    - src: internal-docker-compose
+      dest: /opt/docker
+      owner: adminnick
+      group: adminnick
+  loop_control:
+    loop_var: repo
+
+- name: Setup External User Configs
+  ansible.builtin.file:
+    src: "/home/adminnick/.external-configs/{{ item }}"
+    dest: "/home/adminnick/{{ item }}"
+    state: link
+    force: true
+  loop:
+    - .bash_aliases
+    - .bashrc
+    - .vimrc
+    - .ssh/config

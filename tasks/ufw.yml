@@ -1,0 +1,48 @@
+## Edit this as appropriate for specific roles
+---
+- name: Configure UFW
+  block:
+    # Standard
+    - name: Disable UFW IPv6
+      lineinfile:
+        dest: /etc/default/ufw
+        regexp: "^IPV6"
+        line: "IPV6=no"
+        state: present
+
+    - name: Delete all existing rules (reset UFW)
+      community.general.ufw:
+        state: reset
+
+    - name: Default Allow Outgoing
+      community.general.ufw:
+        default: allow
+        direction: outgoing
+
+    - name: Default Deny Incoming
+      community.general.ufw:
+        default: deny
+        direction: incoming
+
+    # Role Specific
+
+  always:
+    - name: Allow SSH
+      community.general.ufw:
+        rule: allow
+        direction: in
+        port: "{{ ssh_port }}"
+        proto: tcp
+        src: "{{ ssh_nets }}"
+        comment: "Allow SSH"
+      loop:
+        - 10.1.0.0/16
+        - 73.149.158.159/24
+      loop_control:
+        loop_var: ssh_nets
+
+    - name: Enable UFW and set logging
+      community.general.ufw:
+        state: "{{ ufw_state }}"
+        default: deny
+        logging: "{{ ufw_logging }}"
