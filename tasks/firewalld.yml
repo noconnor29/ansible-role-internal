@@ -14,19 +14,19 @@
         state: enabled
         permanent: true
 
-    - name: disable IPv6
-      ansible.builtin.lineinfile:
-        dest: /etc/sysctl.conf
-        regexp: "{{ item.regexp }}"
-        line: "{{ item.line }}"
-        state: present
-        insertafter: EOF
-      loop:
-        - regexp: "^net.ipv6.conf.all.disable_ipv6"
-          line: "net.ipv6.conf.all.disable_ipv6 = 1"
-        - regexp: "^net.ipv6.conf.default.disable_ipv6"
-          line: "net.ipv6.conf.default.disable_ipv6 = 1"
-      notify: reload sysctl
+#    - name: disable IPv6
+#      ansible.builtin.lineinfile:
+#        dest: /etc/sysctl.conf
+#        regexp: "{{ item.regexp }}"
+#        line: "{{ item.line }}"
+#        state: present
+#        insertafter: EOF
+#      loop:
+#        - regexp: "^net.ipv6.conf.all.disable_ipv6"
+#          line: "net.ipv6.conf.all.disable_ipv6 = 1"
+#        - regexp: "^net.ipv6.conf.default.disable_ipv6"
+#          line: "net.ipv6.conf.default.disable_ipv6 = 1"
+#      notify: reload sysctl
 
 - name: Role-specific Firewall Config
   block:

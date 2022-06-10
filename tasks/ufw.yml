@@ -3,12 +3,12 @@
 - name: Configure UFW
   block:
     # Standard
-    - name: Disable UFW IPv6
-      lineinfile:
-        dest: /etc/default/ufw
-        regexp: "^IPV6"
-        line: "IPV6=no"
-        state: present
+#    - name: Disable UFW IPv6
+#      lineinfile:
+#        dest: /etc/default/ufw
+#        regexp: "^IPV6"
+#        line: "IPV6=no"
+#        state: present
 
     - name: Delete all existing rules (reset UFW)
       community.general.ufw:
