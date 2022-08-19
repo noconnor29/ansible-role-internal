@@ -8,20 +8,20 @@
     group: "{{ repo.group }}"
   loop:
     - src: .external-configs
-      dest: /home/adminnick
-      owner: adminnick
-      group: adminnick
+      dest: /home/nick
+      owner: nick
+      group: nick
     - src: internal-docker-compose
       dest: /opt/docker
-      owner: adminnick
-      group: adminnick
+      owner: nick
+      group: nick
   loop_control:
     loop_var: repo
 
 - name: Setup External User Configs
   ansible.builtin.file:
-    src: "/home/adminnick/.external-configs/{{ item }}"
-    dest: "/home/adminnick/{{ item }}"
+    src: "/home/nick/.external-configs/{{ item }}"
+    dest: "/home/nick/{{ item }}"
     state: link
     force: true
   loop:
