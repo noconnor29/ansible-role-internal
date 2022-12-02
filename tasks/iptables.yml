@@ -1,0 +1,35 @@
+---
+#- name:
+#  block:
+# Role-specific
+
+#    - name: Allow iPerf
+#      ansible.builtin.iptables:
+#        chain: INPUT
+#        protocol: tcp
+#        source: 10.1.0.0/16
+#        destination_ports:
+#          - "5201"
+#        ctstate: NEW
+#        syn: match
+#        jump: ACCEPT
+#        comment: "Allow iPerf Connections"
+#
+#  always:
+  - name: Allow new incoming SSH connections from anywhere
+    ansible.builtin.iptables:
+      chain: INPUT
+      protocol: tcp
+      destination_ports:
+        - "{{ ssh_port }}"
+      ctstate: NEW
+      syn: match
+      jump: ACCEPT
+      comment: Accept new SSH connections.
+
+  - name: Allow related and established connections
+    ansible.builtin.iptables:
+      chain: INPUT
+      ctstate: ESTABLISHED,RELATED
+      jump: ACCEPT
+    become: true

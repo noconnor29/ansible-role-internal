@@ -4,12 +4,13 @@
 
 # Pull External git repos
 - include_tasks: git.yml
+- include_tasks: iptables.yml
 
-## Firewall
-# firewalld
-- include_tasks: firewalld.yml
-  when: ansible_os_family == 'RedHat'
-
-# ufw
-- include_tasks: ufw.yml
-  when: ansible_os_family == 'Debian'
+### Firewall
+## firewalld
+#- include_tasks: firewalld.yml
+#  when: ansible_os_family == 'RedHat'
+#
+## ufw
+#- include_tasks: ufw.yml
+#  when: ansible_os_family == 'Debian'
